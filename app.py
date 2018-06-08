@@ -14,8 +14,14 @@ def hello_world():
 def login():
     username = request.form['username']
     password = request.form['pass']
-    if(username =="admin" and password =="admin"):
+    if(username == "admin" and password == "admin"):
         return render_template('index.html', data="Invalid Credentials")
+
+
+@app.route('/login/register')
+def register():
+    return render_template('register.html')
+
 
 if __name__ == '__main__':
     app.run()
