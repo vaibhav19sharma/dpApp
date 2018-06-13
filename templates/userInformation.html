@@ -5,11 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-<a href="register">Register a New User</a>
+
+Displaying Data for : {{ info[0][1] }}
 <br><br>
-<hr>
- {% for k in data %}
-    <a href={{ url_for('userInfo', id = k[1]) }}> {{ k[0] }}</a><br>
+
+
+{%  for i in info%}
+{{ i[0] }} : {{ i[1] }}<br>
 {% endfor %}
+
+
 </body>
 </html>

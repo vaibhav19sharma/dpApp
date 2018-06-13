@@ -8,37 +8,78 @@
 regsiter karo ka form
 
 
-<form action="/regsiter/", method="POST" class="form-horizontal">
+<form action="/login/register", method="POST" class="form-horizontal" name ="userReg">
   First name:<br>
-  <input type="text" name="firstname" value="Mickey">
+  <input type="text" name="name" value="">
   <br>
   Date of Birth:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="dob" value="">
     <br>
  SSN:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="ssn" value="">
     <br>
    Mother’s Maiden Name:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="mother" value="">
     <br>
    Phone Number:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="pno" value="">
         <br>
  Email :<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="email" value="">
     <br>
    Address:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="add" value="">
     <br>
    Forward Address<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="fwdadd" value="">
         <br>
    Amouny of Hard Inquiries:<br>
-  <input type="text" name="lastname" value="Mouse">
+  <input type="text" name="hardinq" value="">
+    <br>
     <hr><hr>
 
-  <br><br>
+  <br>
+    Upload Documents here:
+    <br><br>
+    Social Security Card:<br>
+    <input type="file" name="ssc" accept="image/*">
+  <input type="submit">
+    <br><br>
+    Drivers License:          <br>
+        <input type="file" name="dl" accept="image/*">
+  <input type="submit">
+    <br><br>
+    Utility Bill:<br>
+        <input type="file" name="ub" accept="image/*">
+  <input type="submit">
+    <br><br>
+    Paystub:<br>
+        <input type="file" name="ps" accept="image/*">
+  <input type="submit">
+    <br>
 
+    <hr><hr>
+    <br>
+    Employer Information <br><br>
+    <br>
+  Employed At:<br>
+  <input type="text" name="empat" value="">
+    <br>
+ Annual Salary:<br>
+  <input type="text" name="annsal" value="">
+    <br>
+   Length of Employment:<br>
+  <input type="text" name="lenemp" value="">
+    <br>
+   Employer Phone Number:<br>
+  <input type="text" name="emppno" value="">
+        <br>
+    Employer Email:<br>
+  <input type="text" name="empemail" value="">
+        <br>
+
+    <hr><hr>
+    <br><br>
 
   <input type="submit" value="Submit">
 </form>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        $size: 50px;
+$main-color: #e85454;
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+body {
+   background: $main-color;
+	padding: 0;
+	margin: 0;
+}
+
+.container {
+	height: 100vh;
+	@extend .flex-center;
+}
+
+.button {
+	position: relative;
+	width: $size;
+	height: $size;
+	background: white;
+	border-radius: 100%;
+	@extend .flex-center;
+	animation: growing 1.2s ease infinite;
+
+	&::before {
+		position: absolute;
+		display: block;
+		content: '';
+		top: 0;
+		left: 0;
+		width: $size;
+		height: $size;
+		border-radius: 100%;
+		background: white;
+		z-index: -1;
+		animation: pulse 1.2s ease infinite;
+	}
+
+	a {
+		color: $main-color;
+		font-size: 18px;
+	}
+}
+
+/* Animation */
+/* --------- */
+@keyframes growing {
+	 0% {
+		  transform: scale(1, 1);
+	 }
+	 10% {
+		  transform: scale(0.925, 0.925);
+	 }
+	 30% {
+		  transform: scale(1.025, 1.025);
+	 }
+	 50% {
+		  transform: scale(1, 1);
+	 }
+}
+@keyframes pulse {
+	  0% {
+			 transform: scale(1, 1);
+		  }
+	  50% {
+			 opacity: 0.3;
+	  }
+	  100% {
+			 transform: scale(1.5);
+			 opacity: 0;
+	  }
+}
+    </style>
+</head>
+<body>
+<div class="container">
+	<div class="button"><a href="#"><i class="fa fa-chevron-down" aria-hidden="true"></i></a></div>
+</div>
+</body>
+</html>
