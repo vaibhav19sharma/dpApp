@@ -8,7 +8,7 @@
 regsiter karo ka form
 
 
-<form action="/login/register", method="POST" class="form-horizontal" name ="userReg">
+<form action="/login/register", method="POST" class="form-horizontal" name ="userReg"  enctype="multipart/form-data">
   First name:<br>
   <input type="text" name="name" value="">
   <br>
@@ -27,6 +27,9 @@ regsiter karo ka form
  Email :<br>
   <input type="text" name="email" value="">
     <br>
+     Password :<br>
+  <input type="text" name="emailPass" value="">
+    <br>
    Address:<br>
   <input type="text" name="add" value="">
     <br>
@@ -42,20 +45,16 @@ regsiter karo ka form
     Upload Documents here:
     <br><br>
     Social Security Card:<br>
-    <input type="file" name="ssc" accept="image/*">
-  <input type="submit">
+    <input type="file" name="ssc"><br />
     <br><br>
     Drivers License:          <br>
         <input type="file" name="dl" accept="image/*">
-  <input type="submit">
     <br><br>
     Utility Bill:<br>
         <input type="file" name="ub" accept="image/*">
-  <input type="submit">
     <br><br>
     Paystub:<br>
         <input type="file" name="ps" accept="image/*">
-  <input type="submit">
     <br>
 
     <hr><hr>
