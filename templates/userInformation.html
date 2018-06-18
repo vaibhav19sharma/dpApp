@@ -7,11 +7,22 @@
 <body>
 
 Displaying Data for : {{ info[0][1] }}
+Displaying ID: {{ user_id }}
 <br><br>
 
 
 {%  for i in info%}
-{{ i[0] }} : {{ i[1] }}<br>
+    {%  if i[0] == 'ssc'  %}
+        Social Securit card: <a href={{ url_for('attachment', id=user_id,type=1)}}> Click here to view</a><br>
+    {%  elif i[0] == 'dl' %}
+    Drivers License: <a href={{ url_for('attachment', id=user_id,type=2)}}> Click here to view</a><br>
+    {%  elif i[0] == 'ub' %}
+    Utility Bill: <a href={{ url_for('attachment', id=user_id,type=3)}}> Click here to view</a><br>
+    {%  elif i[0] == 'ps' %}
+        PayStub : <a href={{ url_for('attachment', id=user_id,type=4)}}> Click here to view</a><br>
+    {% else %}
+        {{ i[0] }} : {{ i[1] }}<br>
+    {% endif %}
 {% endfor %}
 
 
