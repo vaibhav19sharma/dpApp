@@ -9,7 +9,8 @@
 <br><br>
 <hr>
  {% for k in data %}
-    <a href={{ url_for('userInfo', id = k[1]) }}> {{ k[0] }}</a><br>
+    <a href={{ url_for('userInfo', id = k[1]) }}> {{ k[0] }}</a>     <a href={{ url_for('sendtext', id = k[1]) }}> Send Text Email</a><br><br>
+
 {% endfor %}
 </body>
 </html>
