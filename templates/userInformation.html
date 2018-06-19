@@ -11,6 +11,7 @@ Displaying ID: {{ user_id }}
 <br><br>
 
 
+
 {%  for i in info%}
     {%  if i[0] == 'ssc'  %}
         Social Securit card: <a href={{ url_for('attachment', id=user_id,type=1)}}> Click here to view</a><br>
@@ -24,6 +25,9 @@ Displaying ID: {{ user_id }}
         {{ i[0] }} : {{ i[1] }}<br>
     {% endif %}
 {% endfor %}
+
+
+
 
 
 </body>
