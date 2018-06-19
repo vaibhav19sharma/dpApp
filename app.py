@@ -113,18 +113,19 @@ def userInfo(id):
     # Restrict mail search. Be very specific.
     # Machine should be very selective to receive messages.
     criteria = {
-        'FROM': 'PRIVILEGED EMAIL ADDRESS',
-        'SUBJECT': 'SPECIAL SUBJECT LINE',
-        'BODY': 'SECRET SIGNATURE',
+        'FROM': '',
+        'SUBJECT': '',
+        'BODY': '',
     }
     uid_max = 0
     server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
     server.login(username, password)
-    server.select('INBOX')
+    server.select('inbox')
 
-    result, data = server.uid('search', None, search_string(uid_max, criteria))
-
+    result, data = server.uid('search', None, 'ALL')
+    #print(int.from_bytes(data[0], byteorder=''))
     uids = [int(s) for s in data[0].split()]
+
     if uids:
         uid_max = max(uids)
         # Initialize `uid_max`. Any UID less than or equal to `uid_max` will be ignored subsequently.
@@ -133,33 +134,34 @@ def userInfo(id):
 
     # Keep checking messages ...
     # I don't like using IDLE because Yahoo does not support it.
-    while 1:
-        # Have to login/logout each time because that's the only way to get fresh results.
 
-        server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
-        server.login(username, password)
-        server.select('INBOX')
+    # Have to login/logout each time because that's the only way to get fresh results.
 
-        result, data = server.uid('search', None, search_string(uid_max, criteria))
+    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
+    server.login(username, password)
+    server.select('inbox')
+    result, data = server.uid('search', None, 'ALL')
 
-        uids = [int(s) for s in data[0].split()]
-        for uid in uids:
-            # Have to check again because Gmail sometimes does not obey UID criterion.
-            #if uid > uid_max:
-            result, data = server.uid('fetch', uid, '(RFC822)')  # fetch entire message
-            msg = email.message_from_string(data[0][1])
+    uids = [int(s) for s in data[0].split()]
 
-            uid_max = uid
+    all_mails = []
+    for uid in uids:
+        # Have to check again because Gmail sometimes does not obey UID criterion.
+        #if uid > uid_max:
+        result, data = server.uid('fetch', str(uid), '(RFC822)')  # fetch entire message
+        msg = email.message_from_string(str(data[0][1]))
 
-            text = get_first_text_block(msg)
-            print ('New message :::::::::::::::::::::')
-            print (text)
-            break
+        uid_max = uid
 
-        server.logout()
-        time.sleep(1)
+        text = get_first_text_block(msg)
+        print ('New message :::::::::::::::::::::')
+        print (msg)
+        all_mails.append(msg)
 
-    return render_template('userInformation.html', info=tList)
+    server.logout()
+    time.sleep(1)
+
+    return render_template('userInformation.html', info=tList, msgs = all_mails)
 
 def search_string(uid_max, criteria):
     c = list(map(lambda t: (t[0], '"' + str(t[1]) + '"'), criteria.items())) + [('UID', '%d:*' % (uid_max + 1))]
