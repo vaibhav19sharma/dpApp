@@ -158,7 +158,68 @@ def userInfo(id):
             continue
         else:
             tList.append((k,v))
-    return render_template('userInformation.html', info = tList, user_id=id)
+    print("tList Print :",tList)
+
+    print (tList[0][1],tList[5][1], tList[6][1])
+    imap_ssl_host = 'imap.gmail.com'  # imap.mail.yahoo.com
+    imap_ssl_port = 993
+    username = tList[5][1]
+    password =tList[6][1]
+    
+    # Restrict mail search. Be very specific.
+    # Machine should be very selective to receive messages.
+    criteria = {
+        'FROM': '',
+        'SUBJECT': '',
+        'BODY': '',
+}
+    uid_max = 0
+    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
+    server.login(username, password)
+    server.select('inbox')
+    
+    result, data = server.uid('search', None, 'ALL')
+    #print(int.from_bytes(data[0], byteorder=''))
+    uids = [int(s) for s in data[0].split()]
+    
+    if uids:
+        uid_max = max(uids)
+    # Initialize `uid_max`. Any UID less than or equal to `uid_max` will be ignored subsequently.
+
+    server.logout()
+
+# Keep checking messages ...
+# I don't like using IDLE because Yahoo does not support it.
+
+# Have to login/logout each time because that's the only way to get fresh results.
+
+    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
+    server.login(username, password)
+    server.select('inbox')
+    result, data = server.uid('search', None, 'ALL')
+
+    uids = [int(s) for s in data[0].split()]
+
+    all_mails = []
+    for uid in uids:
+        # Have to check again because Gmail sometimes does not obey UID criterion.
+        #if uid > uid_max:
+        result, data = server.uid('fetch', str(uid), '(RFC822)')  # fetch entire message
+        msg = email.message_from_string(str(data[0][1]))
+        
+        uid_max = uid
+            
+        text = get_first_text_block(msg)
+        print ('New message :::::::::::::::::::::')
+        print (msg)
+        all_mails.append(msg)
+
+    server.logout()
+    time.sleep(1)
+
+    return render_template('userInformation.html', info=tList, msgs = all_mails)
+
+
 
 
 @app.route('/attachment/<id><type>', methods=['POST', 'GET'])
@@ -185,66 +246,7 @@ def attachment(id,type):
     return render_template('attachments.html', user_id=binInfo)
 
 
-    print("tList Print :",tList)
 
-    print (tList[0][1],tList[5][1], tList[6][1])
-    imap_ssl_host = 'imap.gmail.com'  # imap.mail.yahoo.com
-    imap_ssl_port = 993
-    username = tList[5][1]
-    password =tList[6][1]
-
-    # Restrict mail search. Be very specific.
-    # Machine should be very selective to receive messages.
-    criteria = {
-        'FROM': '',
-        'SUBJECT': '',
-        'BODY': '',
-    }
-    uid_max = 0
-    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
-    server.login(username, password)
-    server.select('inbox')
-
-    result, data = server.uid('search', None, 'ALL')
-    #print(int.from_bytes(data[0], byteorder=''))
-    uids = [int(s) for s in data[0].split()]
-
-    if uids:
-        uid_max = max(uids)
-        # Initialize `uid_max`. Any UID less than or equal to `uid_max` will be ignored subsequently.
-
-    server.logout()
-
-    # Keep checking messages ...
-    # I don't like using IDLE because Yahoo does not support it.
-
-    # Have to login/logout each time because that's the only way to get fresh results.
-
-    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
-    server.login(username, password)
-    server.select('inbox')
-    result, data = server.uid('search', None, 'ALL')
-
-    uids = [int(s) for s in data[0].split()]
-
-    all_mails = []
-    for uid in uids:
-        # Have to check again because Gmail sometimes does not obey UID criterion.
-        #if uid > uid_max:
-        result, data = server.uid('fetch', str(uid), '(RFC822)')  # fetch entire message
-        msg = email.message_from_string(str(data[0][1]))
-
-        uid_max = uid
-
-        text = get_first_text_block(msg)
-        print ('New message :::::::::::::::::::::')
-        print (msg)
-        all_mails.append(msg)
-
-    server.logout()
-    time.sleep(1)
-
-    return render_template('userInformation.html', info=tList, msgs = all_mails)
 
 def search_string(uid_max, criteria):
     c = list(map(lambda t: (t[0], '"' + str(t[1]) + '"'), criteria.items())) + [('UID', '%d:*' % (uid_max + 1))]
