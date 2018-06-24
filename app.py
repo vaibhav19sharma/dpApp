@@ -201,18 +201,22 @@ def userInfo(id):
     uids = [int(s) for s in data[0].split()]
 
     all_mails = []
+    i=0
     for uid in uids:
         # Have to check again because Gmail sometimes does not obey UID criterion.
         #if uid > uid_max:
         result, data = server.uid('fetch', str(uid), '(RFC822)')  # fetch entire message
         msg = email.message_from_string(str(data[0][1]))
-        
+        i=i+1
         uid_max = uid
+
             
         text = get_first_text_block(msg)
         print ('New message :::::::::::::::::::::')
         print (msg)
         all_mails.append(msg)
+        if i>10:
+            break
 
     server.logout()
     time.sleep(1)
