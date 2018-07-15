@@ -25,6 +25,11 @@ Displaying ID: {{ user_id }}
         {{ i[0] }} : {{ i[1] }}<br>
     {% endif %}
 {% endfor %}
+{% for i in range(10) %}
+    :::::::::::::::: New Message :::::::::::::::::
+    Mail {{ i }}  : {% print(msgs[i]) %} <br><br>
+
+{% endfor %}
 
 
 

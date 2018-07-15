@@ -14,9 +14,9 @@ import smtplib
 
 from pymongo import MongoClient
 
-app = Flask(__name__, static_folder="C:\\Users\\vaibh\\Desktop\\haxor\\dpApp\\static")
+app = Flask(__name__, static_folder = "static")
 
-BASE = "C:\\Users\\vaibh\\Desktop\\haxor\\dpApp\\static\\uploads"
+BASE = "static/"
 client = MongoClient()
 client = MongoClient('localhost', 27017)
 
@@ -24,7 +24,7 @@ db = client['pymongo_test']
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-posts = db.projectX
+posts = db.demoOne
 for i in posts.find({}):
     print(i['_id'])
 temp = posts.find_one({'name': 'Vaibhav Sharma'})
@@ -46,7 +46,7 @@ def login():
         cursor = posts.find({})
         if cursor is not None:
             for i in cursor:
-                tempData.append((i['name'],i['_id']))
+                tempData.append((i['Name'],i['_id']))
         else:
             tempData = ["Add users"]
 
@@ -60,8 +60,10 @@ def register():
     if request.method == 'GET':
         return render_template('register.html')
     if request.method == 'POST':
-        values=["name","dob","ssn","mother","pno","email",'emailPass',"add","fwdadd","hardinq","empat","annsal","lenemp","emppno","empemail"]
+        values=["Name","Date_Of_Birth","Social_Security_Number","Mother","PhoneNumber","Email",'Emails_Password',"Address","Forwarded_Address","Hard_Inquiry","Employeed_At","Annual_Salary","Length_Employment","Employer_Phone_Number","Employer_Email","Number_Of_TradeLines","Number_Of_Cards_Applied_For","Number_Of_Cards"]
         insVal= dict()
+        # import pdb
+        # pdb.set_trace()
         for i in values:
             if request.form[i] =='':
                 insVal[i] = "No Data Added"
@@ -75,11 +77,9 @@ def register():
             lstUser = (i['_id'])
         print("Last value is {}".format(str(lstUser)))
         directory = "static/" + str(lstUser) +"/"
-
-
         if request.files['ssc']:
 
-            directory = BASE + "\\" + str(lstUser) + "\\ssc\\"
+            directory = BASE + "/" + str(lstUser) + "/ssc/"
             path1 = directory
 
             os.chmod(BASE, 0o777)
@@ -92,7 +92,7 @@ def register():
 
         if request.files['dl']:
 
-            directory = BASE + "\\" + str(lstUser) + "\\dl\\"
+            directory = BASE + "/" + str(lstUser) + "/dl/"
             path1 = directory
 
             os.chmod(BASE, 0o777)
@@ -104,7 +104,7 @@ def register():
 
         if request.files['ub']:
 
-            directory = BASE + "\\" + str(lstUser) + "\\ub\\"
+            directory = BASE + "/" + str(lstUser) + "/ub/"
             path1 = directory
 
             os.chmod(BASE, 0o777)
@@ -116,7 +116,7 @@ def register():
 
         if request.files['ps']:
 
-            directory = BASE + "\\" + str(lstUser) + "\\ps\\"
+            directory = BASE + "/" + str(lstUser) + "/ps/"
             path1 = directory
 
             os.chmod(BASE, 0o777)
@@ -130,23 +130,38 @@ def register():
         posts.insert(insVal)
         print("inserted successfully")
 
-
-
-
         tempData = []
         cursor = posts.find({})
         if cursor is not None:
             for i in cursor:
-                tempData.append((i['name'],i['_id']))
+                tempData.append((i["Name"],i['_id']))
         else:
             tempData = ["Add users"]
         print(request.files['ssc'])
-        return render_template('index.html', data=tempData)
 
+
+        return render_template('addCardandTrade.html', data=tempData[-1][1], numberTrade = int(insVal['Number_Of_TradeLines']), numberCardApplied= int(insVal['Number_Of_Cards_Applied_For']), numberCard = int(insVal['Number_Of_Cards']))
+
+@app.route('/addCardandTrade/<id>', methods = ['POST','GET'])
+def addCardandTrade(id):
+    if request.method == 'GET':
+        return render_template('addCardandTrade.html')
+    if request.method == 'POST':
+        import pdb
+        pdb.set_trace()
+        tempData = []
+        cursor = posts.find({})
+        if cursor is not None:
+            for i in cursor:
+                tempData.append((i["Name"],i['_id']))
+        else:
+            tempData = ["Add users"]
+        return render_template('index.html', data=tempData)
 
 @app.route('/userInfo/<id>', methods=['POST', 'GET'])
 def userInfo(id):
     print(id)
+    user_id= id
     print("-----------------")
     cursor = posts.find({'_id': ObjectId(id)})
     temp = dict()
@@ -201,23 +216,27 @@ def userInfo(id):
     uids = [int(s) for s in data[0].split()]
 
     all_mails = []
+    i=0
     for uid in uids:
         # Have to check again because Gmail sometimes does not obey UID criterion.
         #if uid > uid_max:
         result, data = server.uid('fetch', str(uid), '(RFC822)')  # fetch entire message
         msg = email.message_from_string(str(data[0][1]))
-        
+        i=i+1
         uid_max = uid
+
             
         text = get_first_text_block(msg)
         print ('New message :::::::::::::::::::::')
         print (msg)
         all_mails.append(msg)
+        if i>10:
+            break
 
     server.logout()
     time.sleep(1)
 
-    return render_template('userInformation.html', info=tList, msgs = all_mails)
+    return render_template('userInformation.html', info=tList, msgs = all_mails, user_id = user_id)
 
 
 
@@ -243,7 +262,7 @@ def attachment(id,type):
         print(i)
     print(binInfo)
 
-    return render_template('attachments.html', user_id=binInfo)
+    return render_template('attachments.html', user_id=binInfo[8:len(binInfo)])
 
 
 

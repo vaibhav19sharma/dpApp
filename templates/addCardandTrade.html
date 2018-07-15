@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ data }}
+
+{{ numberCard }}    {{ numberTrade }}
+<br><hr>
+
+<form action="/addCardandTrade/{{ data }}'", method="POST" class="form-horizontal" name ="userReg"  enctype="multipart/form-data">
+    Add {{ numberTrade }} Tradelines
+    {% for i in range(numberTrade) %}
+        <br><hr>
+        Tradeline {{ i }}
+        Bank_Name:<br>
+      <input type="text" name="Bank_Name" value="">
+      <br>
+      Credit_Limit:<br>
+      <input type="text" name="Credit_Limit" value="">
+        <br>
+     Age_Of_Account:<br>
+      <input type="text" name="Age_Of_Account" value="">
+        <br>
+       Status<br>
+      <input type="text" name="Status" value="">
+        <br>
+       Tradeline_Open_Close<br>
+      <input type="text" name="Tradeline_Open_Close" value="">
+        <br>
+    {% endfor %}
+
+ Add {{ numberCardApplied }} Cards
+    {% for i in range(numberCardApplied) %}
+        <br><hr>
+        Card {{ i }}
+        Bank_Name:<br>
+      <input type="text" name="Bank_Name_Card" value="">
+      <br>
+      Date_Applied:<br>
+      <input type="text" name="Date_Applied" value="">
+        <br>
+     Card_Applies_For:<br>
+      <input type="text" name="Card_Applies_For" value="">
+        <br>
+       Status<br>
+      <input type="text" name="Status_Card" value="">
+        <br>
+    {% endfor %}
+
+
+  {{ numberCard }} Active Cards
+    {% for i in range(numberCard) %}
+        <br><hr>
+        Card {{ i }}
+        Bank_Name:<br>
+      <input type="text" name="Bank_Name_Card" value="">
+      <br>
+      Credit_Limit:<br>
+      <input type="text" name="Credit_Limit_Card" value="">
+        <br>
+     Balance_Card:<br>
+      <input type="text" name="Balance_Card" value="">
+        <br>
+
+    {% endfor %}
+ <input type="submit" value="Submit">
+</form>
+</body>
+</html>
