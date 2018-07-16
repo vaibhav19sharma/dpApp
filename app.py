@@ -147,15 +147,64 @@ def addCardandTrade(id):
     if request.method == 'GET':
         return render_template('addCardandTrade.html')
     if request.method == 'POST':
-        import pdb
-        pdb.set_trace()
+
+        tl_bankname = request.form.getlist('Bank_Name')
+        tl_crLimit = request.form.getlist('Credit_Limit')
+        tl_age= request.form.getlist('Age_Of_Account')
+        tl_status=request.form.getlist('Status')
+        tl_openclose=request.form.getlist('Tradeline_Open_Close')
+
+        add_bankname=request.form.getlist('Bank_Name_Card')
+        add_date=request.form.getlist('Date_Applied')
+        add_applies=request.form.getlist('Card_Applies_For')
+        add_status=request.form.getlist('Status_Card')
+
+        active_bankname=request.form.getlist('ActiveBank_Name_Card')
+        active_limit=request.form.getlist('Credit_Limit_Card')
+        active_balance=request.form.getlist('Balance_Card')
+        trade=[]
+        tradeLine= dict()
+        applied=[]
+        app_cards= dict()
+        active=[]
+        active_cards = dict()
+
+        for i in range(len(tl_bankname)):
+            tradeLine['BankName']=tl_bankname[i]
+            tradeLine['Credit_Limit']= tl_crLimit[i]
+            tradeLine['Age']= tl_age[i]
+            tradeLine['Status']=tl_status[i]
+            tradeLine['Open_Close']=tl_openclose
+            trade.append(tradeLine)
+
+        for i in range(len(add_bankname)):
+            #import pdb
+            #pdb.set_trace()
+            app_cards['BankName']=add_bankname[i]
+            app_cards['Date_Apllied']=add_date[i]
+            app_cards['Applies']=add_applies[i]
+            app_cards['Status']=add_status[i]
+            applied.append(app_cards)
+
+        for i in range(len(active_bankname)):
+            active_cards['BankName']= active_bankname[i]
+            active_cards['Limit']= active_limit[i]
+            active_cards['Balance']=active_balance[i]
+            active.append(active_cards)
+        id_new =id.replace("'","")
+
         tempData = []
-        cursor = posts.find({})
+        cursor = posts.find({'_id': ObjectId(id_new)})
+        posts.update({'_id': ObjectId(id_new)},{
+            "$set" : {"TradeLines":trade, "ActiveCards":active, "AppliedCards":applied}
+        })
         if cursor is not None:
             for i in cursor:
                 tempData.append((i["Name"],i['_id']))
         else:
             tempData = ["Add users"]
+        print(posts.find({'_id':ObjectId(id_new)}))
+
         return render_template('index.html', data=tempData)
 
 @app.route('/userInfo/<id>', methods=['POST', 'GET'])
